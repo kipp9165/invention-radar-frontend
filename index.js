@@ -74,14 +74,15 @@ const createRadarResponse = (input) => {
 const handleRadar = (req, res) => {
   try {
     const { input } = req.body || {};
+    const trimmedInput = typeof input === "string" ? input.trim() : "";
 
-    if (typeof input !== "string" || input.trim().length === 0) {
+    if (trimmedInput.length === 0) {
       return res.status(400).json({
         error: "Missing or invalid 'input'. Expected a non-empty string."
       });
     }
 
-    return res.status(200).json(createRadarResponse(input.trim()));
+    return res.status(200).json(createRadarResponse(trimmedInput));
   } catch (err) {
     console.error("Error in /radar:", err);
     return res.status(500).json({
@@ -105,6 +106,7 @@ app.use((err, req, res, next) => {
     return next(err);
   }
 
+  // Handles malformed JSON payloads raised by express.json middleware.
   if (err?.type === "entity.parse.failed") {
     return res.status(400).json({ error: "Invalid JSON payload." });
   }
