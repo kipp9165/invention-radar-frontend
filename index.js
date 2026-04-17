@@ -94,7 +94,8 @@ const handleRadar = (req, res) => {
 // ----- Core Invention Radar stub (safe, stable, extendable) -----
 app.post("/radar", handleRadar);
 
-// Backwards-compatible root POST (canonical entrypoint remains POST /radar).
+// Backwards-compatible root POST for legacy clients.
+// Canonical entrypoint remains POST /radar and this alias can be removed once clients migrate.
 app.post("/", handleRadar);
 
 app.use((req, res) => {
