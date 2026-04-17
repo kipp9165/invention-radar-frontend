@@ -94,7 +94,7 @@ const handleRadar = (req, res) => {
 // ----- Core Invention Radar stub (safe, stable, extendable) -----
 app.post("/radar", handleRadar);
 
-// Backwards-compatible root POST (if you were previously POSTing to `/`)
+// Backwards-compatible root POST (canonical entrypoint remains POST /radar).
 app.post("/", handleRadar);
 
 app.use((req, res) => {
@@ -107,7 +107,7 @@ app.use((err, req, res, next) => {
   }
 
   // Handles malformed JSON payloads raised by express.json middleware.
-  if (err?.type === "entity.parse.failed") {
+  if (err instanceof SyntaxError && err.status === 400) {
     return res.status(400).json({ error: "Invalid JSON payload." });
   }
 
